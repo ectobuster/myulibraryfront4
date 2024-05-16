@@ -1,0 +1,17 @@
+.navbar {
+    width: 200px; /* Set the fixed width */
+    background-color: #333; /* Example background color */
+    padding: 10px; /* Example padding */
+  }
+  
+  .nav-link {
+    color: #fff; /* Example text color */
+    text-decoration: none; /* Example text decoration */
+    display: block; /* Make the links block elements */
+    margin-bottom: 10px; /* Example margin */
+  }
+  
+  .nav-link:hover {
+    background-color: #555; /* Example background color on hover */
+  }
+  

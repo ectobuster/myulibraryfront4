@@ -40,3 +40,18 @@
 .read-the-docs {
   color: #888;
 }
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* Ensure the container takes up the full height of the viewport */
+}
+
+.content {
+  flex: 1; /* Allow the content to take up the remaining space */
+  overflow-y: auto; /* Add a vertical scrollbar if needed */
+}
+
+body {
+  background-color: #fffdd0; /* Light cream color */
+}
