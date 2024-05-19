@@ -1,56 +1,3 @@
-// import React, { useState, useEffect } from 'react';
-// import { BookCheckout } from '../interfaces'; 
-// import { Table, TableHead, TableRow, TableCell, TableBody, TableContainer, Paper } from '@mui/material';
-
-// const UserBackpack = () => {
-//   const [backpack, setBackpack] = useState<BookCheckout[]>([]);
-
-//   useEffect(() => {
-//     fetchBackpack();
-//   }, []);
-
-//   const fetchBackpack = async () => {
-//     try {
-//       const response = await fetch('http://localhost:5000/book-checkouts');
-//       const data = await response.json();
-//       setBackpack(data);
-//     } catch (error) {
-//       console.error('Error fetching backpack:', error);
-//     }
-//   };
-
-//   return (
-//     <TableContainer component={Paper}>
-//       <Table>
-//         <TableHead>
-//           <TableRow>
-//             <TableCell>User ID</TableCell>
-//             <TableCell>Book ID</TableCell>
-//             <TableCell>Checkout Date</TableCell>
-//             <TableCell>Return Date</TableCell>
-//             <TableCell>Returned</TableCell>
-//           </TableRow>
-//         </TableHead>
-//         <TableBody>
-//           {backpack.map((checkout) => (
-//             <TableRow key={checkout.checkout_id}>
-//               <TableCell>{checkout.user_id}</TableCell>
-//               <TableCell>{checkout.book_id}</TableCell>
-//               <TableCell>{checkout.checkout_date}</TableCell>
-//               <TableCell>{checkout.return_date}</TableCell>
-//               <TableCell>{checkout.returned ? 'Yes' : 'No'}</TableCell>
-//             </TableRow>
-//           ))}
-//         </TableBody>
-//       </Table>
-//     </TableContainer>
-//   );
-// };
-
-// export default UserBackpack;
-
-
-
 import React, { useState, useEffect } from 'react';
 import { BookCheckout } from '../interfaces'; 
 import { Table, TableHead, TableRow, TableCell, TableBody, TableContainer, Paper, Button } from '@mui/material';
@@ -96,18 +43,20 @@ const UserBackpack = () => {
         <TableHead>
           <TableRow>
             <TableCell>User ID</TableCell>
-            <TableCell>Book ID</TableCell>
+            <TableCell>Book Title</TableCell>
+            <TableCell>Book ID</TableCell> {/* New column for book ID */}
             <TableCell>Checkout Date</TableCell>
             <TableCell>Return Date</TableCell>
             <TableCell>Returned</TableCell>
-            <TableCell>Action</TableCell> {/* New column for delete buttons */}
+            <TableCell>Action</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {backpack.map((checkout) => (
             <TableRow key={checkout.checkout_id}>
               <TableCell>{checkout.user_id}</TableCell>
-              <TableCell>{checkout.book_id}</TableCell>
+              <TableCell>{checkout.title}</TableCell> {/* Display book title */}
+              <TableCell>{checkout.book_id}</TableCell> {/* Display book ID */}
               <TableCell>{checkout.checkout_date}</TableCell>
               <TableCell>{checkout.return_date}</TableCell>
               <TableCell>{checkout.returned ? 'Yes' : 'No'}</TableCell>

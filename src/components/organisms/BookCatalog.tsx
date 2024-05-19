@@ -1,6 +1,3 @@
-
-
-
 import React, { useState, useEffect } from 'react';
 import { Books } from '../interfaces'; 
 import { Table, TableHead, TableRow, TableCell, TableBody, TableContainer, Paper, Button } from '@mui/material';
@@ -22,8 +19,9 @@ const BookCatalog = () => {
     }
   };
 
-  const handleAddToBackpack = async (bookId: number) => {
+  const handleAddToBackpack = async (bookId: number, title: string) => {
     try {
+      console.log('Adding book to backpack:', { bookId, title }); // Log the data being sent
       const response = await fetch('http://localhost:5000/book-checkouts', {
         method: 'POST',
         headers: {
@@ -32,6 +30,7 @@ const BookCatalog = () => {
         body: JSON.stringify({
           user_id: 1, // Assuming user_id is 1 for this experiment
           book_id: bookId,
+          title: title, // Include the title of the book
           checkout_date: new Date().toISOString(), // Current date as checkout date
         }),
       });
@@ -75,7 +74,7 @@ const BookCatalog = () => {
                 <TableCell>{book.genre}</TableCell>
                 <TableCell>{book.available}</TableCell>
                 <TableCell>
-                  <Button onClick={() => handleAddToBackpack(book.book_id)}>Add to Backpack</Button>
+                  <Button onClick={() => handleAddToBackpack(book.book_id, book.title)}>Add to Backpack</Button>
                 </TableCell>
               </TableRow>
             ))}
