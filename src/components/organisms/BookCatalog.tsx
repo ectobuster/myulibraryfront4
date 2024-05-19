@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Books } from '../interfaces'; 
-import { Table, TableHead, TableRow, TableCell, TableBody, TableContainer, Paper, Button } from '@mui/material';
+import { Table, TableHead, TableRow, TableCell, TableBody, TableContainer, Paper, TextField, Button } from '@mui/material';
 
 const BookCatalog = () => {
   const [books, setBooks] = useState<Books[]>([]);
+  const [searchTitle, setSearchTitle] = useState('');
+  const [searchAuthor, setSearchAuthor] = useState('');
+  const [searchGenre, setSearchGenre] = useState('');
 
   useEffect(() => {
     fetchBooks();
@@ -48,24 +51,46 @@ const BookCatalog = () => {
     }
   };
 
+  const filteredBooks = books.filter(book => 
+    book.title.toLowerCase().includes(searchTitle.toLowerCase()) &&
+    book.author.toLowerCase().includes(searchAuthor.toLowerCase()) &&
+    book.genre.toLowerCase().includes(searchGenre.toLowerCase())
+  );
+
   return (
-    <TableContainer component={Paper}>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>ID</TableCell>
-            <TableCell>Title</TableCell>
-            <TableCell>Author</TableCell>
-            <TableCell>Published Year</TableCell>
-            <TableCell>Genre</TableCell>
-            <TableCell>Available</TableCell>
-            <TableCell>Action</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {books
-            .filter((book) => book.available > 0) // Filter books with available units greater than 0
-            .map((book) => (
+    <div>
+      <TextField
+        label="Title"
+        value={searchTitle}
+        onChange={(e) => setSearchTitle(e.target.value)}
+      />
+      <TextField
+        label="Author"
+        value={searchAuthor}
+        onChange={(e) => setSearchAuthor(e.target.value)}
+      />
+      <TextField
+        label="Genre"
+        value={searchGenre}
+        onChange={(e) => setSearchGenre(e.target.value)}
+      />
+      <Button variant="contained" onClick={fetchBooks}>Search</Button>
+
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>ID</TableCell>
+              <TableCell>Title</TableCell>
+              <TableCell>Author</TableCell>
+              <TableCell>Published Year</TableCell>
+              <TableCell>Genre</TableCell>
+              <TableCell>Available</TableCell>
+              <TableCell>Action</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {filteredBooks.map((book) => (
               <TableRow key={book.id}>
                 <TableCell>{book.book_id}</TableCell>
                 <TableCell>{book.title}</TableCell>
@@ -78,9 +103,10 @@ const BookCatalog = () => {
                 </TableCell>
               </TableRow>
             ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </div>
   );
 };
 
