@@ -1,5 +1,5 @@
 import React, { useState, ChangeEvent } from 'react';
-import { Button, TextField } from '@mui/material';
+import { Button, TextField, Paper } from '@mui/material';
 
 const AddBookForm = () => {
   const [newBook, setNewBook] = useState({
@@ -47,7 +47,8 @@ const AddBookForm = () => {
   };
 
   return (
-    <div>
+    <div style={{ width: '1200px' }}>
+    <Paper elevation={3} style={{ padding: '20px' }}>
       <TextField
         name="title"
         label="Title"
@@ -80,6 +81,7 @@ const AddBookForm = () => {
         onChange={handleInputChange}
       />
       <Button onClick={handleAddBook}>Add Book</Button>
+    </Paper>
     </div>
   );
 };

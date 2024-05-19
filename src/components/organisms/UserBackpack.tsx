@@ -38,36 +38,38 @@ const UserBackpack = () => {
   };
 
   return (
-    <TableContainer component={Paper}>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>User ID</TableCell>
-            <TableCell>Book Title</TableCell>
-            <TableCell>Book ID</TableCell> {/* New column for book ID */}
-            <TableCell>Checkout Date</TableCell>
-            <TableCell>Return Date</TableCell>
-            <TableCell>Returned</TableCell>
-            <TableCell>Action</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {backpack.map((checkout) => (
-            <TableRow key={checkout.checkout_id}>
-              <TableCell>{checkout.user_id}</TableCell>
-              <TableCell>{checkout.title}</TableCell> {/* Display book title */}
-              <TableCell>{checkout.book_id}</TableCell> {/* Display book ID */}
-              <TableCell>{checkout.checkout_date}</TableCell>
-              <TableCell>{checkout.return_date}</TableCell>
-              <TableCell>{checkout.returned ? 'Yes' : 'No'}</TableCell>
-              <TableCell>
-                <Button onClick={() => handleDeleteFromBackpack(checkout.checkout_id)}>Delete</Button>
-              </TableCell>
+    <div style={{ width: '1200px' }}>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>User ID</TableCell>
+              <TableCell>Book Title</TableCell>
+              <TableCell>Book ID</TableCell> {/* New column for book ID */}
+              <TableCell>Checkout Date</TableCell>
+              <TableCell>Return Date</TableCell>
+              <TableCell>Returned</TableCell>
+              <TableCell>Action</TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+          </TableHead>
+          <TableBody>
+            {backpack.map((checkout) => (
+              <TableRow key={checkout.checkout_id}>
+                <TableCell>{checkout.user_id}</TableCell>
+                <TableCell>{checkout.title}</TableCell> {/* Display book title */}
+                <TableCell>{checkout.book_id}</TableCell> {/* Display book ID */}
+                <TableCell>{checkout.checkout_date}</TableCell>
+                <TableCell>{checkout.return_date}</TableCell>
+                <TableCell>{checkout.returned ? 'Yes' : 'No'}</TableCell>
+                <TableCell>
+                  <Button onClick={() => handleDeleteFromBackpack(checkout.checkout_id)}>Delete</Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </div>
   );
 };
 

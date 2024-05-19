@@ -1,40 +1,37 @@
+import React from 'react';
+import { Table, TableHead, TableRow, TableCell, TableBody, TableContainer, Paper, Button } from '@mui/material';
 
-
-import React, { useState, useEffect } from 'react';
-import { Books } from '../interfaces'; // Adjust the path based on your project structure
-import { Table, TableHead, TableRow, TableCell, TableBody, TableContainer, Paper } from '@mui/material';
-
-const BookList = () => {
-  const [books, setBooks] = useState<Books[]>([])
-
-
-  useEffect(() => {
-    fetch('http://localhost:5000/books') 
-      .then(response => response.json())
-      .then(data => setBooks(data))
-      .catch(error => console.error('Error fetching books:', error));
-  }, []);
-
+const BookList = ({ books, handleAddToBackpack }) => {
   return (
     <TableContainer component={Paper}>
-    <Table>
-      <TableHead>
-        <TableRow>
-          <TableCell>Title</TableCell>
-          <TableCell>Author</TableCell>
-          <TableCell>Published Year</TableCell>
-        </TableRow>
-      </TableHead>
-      <TableBody>
-        {books.map((Books) => (
-          <TableRow key={Books.id}>
-            <TableCell>{Books.title}</TableCell>
-            <TableCell>{Books.author}</TableCell>
-            <TableCell>{Books.published_year}</TableCell>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell>ID</TableCell>
+            <TableCell>Title</TableCell>
+            <TableCell>Author</TableCell>
+            <TableCell>Published Year</TableCell>
+            <TableCell>Genre</TableCell>
+            <TableCell>Available</TableCell>
+            <TableCell>Action</TableCell>
           </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+        </TableHead>
+        <TableBody>
+          {books.map((book) => (
+            <TableRow key={book.id}>
+              <TableCell>{book.book_id}</TableCell>
+              <TableCell>{book.title}</TableCell>
+              <TableCell>{book.author}</TableCell>
+              <TableCell>{book.published_year}</TableCell>
+              <TableCell>{book.genre}</TableCell>
+              <TableCell>{book.available}</TableCell>
+              <TableCell>
+                <Button onClick={() => handleAddToBackpack(book)}>Add to Backpack</Button>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
     </TableContainer>
   );
 };

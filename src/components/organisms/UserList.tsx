@@ -83,62 +83,64 @@ const UserList = () => {
   };
 
   return (
-    <div>
-      <TextField
-        name="first_name"
-        label="First Name"
-        value={newUser.first_name}
-        onChange={handleChange}
-      />
-      <TextField
-        name="last_name"
-        label="Last Name"
-        value={newUser.last_name}
-        onChange={handleChange}
-      />
-      <TextField
-        name="email"
-        label="Email"
-        value={newUser.email}
-        onChange={handleChange}
-      />
-      <TextField
-        name="role"
-        label="Role"
-        value={newUser.role}
-        onChange={handleChange}
-      />
-      <Button onClick={handleAddUser}>Add User</Button>
+    <Paper> {/* Add Paper component */}
+      <div style={{ width: '1200px' }}>
+        <TextField
+          name="first_name"
+          label="First Name"
+          value={newUser.first_name}
+          onChange={handleChange}
+        />
+        <TextField
+          name="last_name"
+          label="Last Name"
+          value={newUser.last_name}
+          onChange={handleChange}
+        />
+        <TextField
+          name="email"
+          label="Email"
+          value={newUser.email}
+          onChange={handleChange}
+        />
+        <TextField
+          name="role"
+          label="Role"
+          value={newUser.role}
+          onChange={handleChange}
+        />
+        <Button onClick={handleAddUser}>Add User</Button>
 
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>ID</TableCell>
-              <TableCell>First Name</TableCell>
-              <TableCell>Last Name</TableCell>
-              <TableCell>Email</TableCell>
-              <TableCell>Role</TableCell>
-              <TableCell>Action</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {users.map((user) => (
-              <TableRow key={user.user_id}>
-                <TableCell>{user.user_id}</TableCell>
-                <TableCell>{user.first_name}</TableCell>
-                <TableCell>{user.last_name}</TableCell>
-                <TableCell>{user.email}</TableCell>
-                <TableCell>{user.role}</TableCell>
-                <TableCell>
-                  <Button onClick={() => handleDeleteUser(user.user_id)}>Delete</Button>
-                </TableCell>
+        <TableContainer component={Paper}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>ID</TableCell>
+                <TableCell>First Name</TableCell>
+                <TableCell>Last Name</TableCell>
+                <TableCell>Email</TableCell>
+                <TableCell>Role</TableCell>
+                <TableCell>Action</TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </div>
+            </TableHead>
+            <TableBody>
+              {users.map((user) => (
+                <TableRow key={user.user_id}>
+                  <TableCell>{user.user_id}</TableCell>
+                  <TableCell>{user.first_name}</TableCell>
+                  <TableCell>{user.last_name}</TableCell>
+                  <TableCell>{user.email}</TableCell>
+                  <TableCell>{user.role}</TableCell>
+                  <TableCell>
+                    <Button onClick={() => handleDeleteUser(user.user_id)}>Delete</Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </div>
+    </Paper>
   );
 };
 

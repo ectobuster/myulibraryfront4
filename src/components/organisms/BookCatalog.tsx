@@ -22,9 +22,9 @@ const BookCatalog = () => {
     }
   };
 
-  const handleAddToBackpack = async (bookId: number, title: string) => {
+  const handleAddToBackpack = async (book: Books) => {
     try {
-      console.log('Adding book to backpack:', { bookId, title }); // Log the data being sent
+      console.log('Adding book to backpack:', book); // Log the data being sent
       const response = await fetch('http://localhost:5000/book-checkouts', {
         method: 'POST',
         headers: {
@@ -32,14 +32,33 @@ const BookCatalog = () => {
         },
         body: JSON.stringify({
           user_id: 1, // Assuming user_id is 1 for this experiment
-          book_id: bookId,
-          title: title, // Include the title of the book
+          book_id: book.book_id,
+          title: book.title,
+          author: book.author,
+          published_year: book.published_year,
+          genre: book.genre,
           checkout_date: new Date().toISOString(), // Current date as checkout date
         }),
       });
       if (response.ok) {
         console.log('Book added to backpack successfully');
-        
+  
+        // Update the available count of the book in the database
+        await fetch(`http://localhost:5000/books/${book.book_id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            "book_id": book.book_id,
+            "title": book.title,
+            "author": book.author,
+            "published_year": book.published_year,
+            "genre": book.genre,
+            "available": book.available - 1
+          }), // Send the full JSON representation of the book
+        });
+  
         // Refresh the table by fetching the updated book list from the backend
         fetchBooks();
       } else {
@@ -57,24 +76,31 @@ const BookCatalog = () => {
     book.genre.toLowerCase().includes(searchGenre.toLowerCase())
   );
 
+  // Sort the filteredBooks array by book_id before rendering
+  const sortedBooks = filteredBooks.sort((a, b) => a.book_id - b.book_id);
+
   return (
-    <div>
-      <TextField
-        label="Title"
-        value={searchTitle}
-        onChange={(e) => setSearchTitle(e.target.value)}
-      />
-      <TextField
-        label="Author"
-        value={searchAuthor}
-        onChange={(e) => setSearchAuthor(e.target.value)}
-      />
-      <TextField
-        label="Genre"
-        value={searchGenre}
-        onChange={(e) => setSearchGenre(e.target.value)}
-      />
-      <Button variant="contained" onClick={fetchBooks}>Search</Button>
+    <div style={{ width: '1200px' }}>
+      
+      <Paper elevation={3} style={{ padding: '20px', marginBottom: '20px' }}>
+        <TextField
+          label="Title"
+          value={searchTitle}
+          onChange={(e) => setSearchTitle(e.target.value)}
+        />
+        <TextField
+          label="Author"
+          value={searchAuthor}
+          onChange={(e) => setSearchAuthor(e.target.value)}
+        />
+        <TextField
+          label="Genre"
+          value={searchGenre}
+          onChange={(e) => setSearchGenre(e.target.value)}
+        />
+        <Button variant="contained" onClick={fetchBooks}>Search</Button>
+      </Paper>
+
 
       <TableContainer component={Paper}>
         <Table>
@@ -90,7 +116,7 @@ const BookCatalog = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {filteredBooks.map((book) => (
+            {sortedBooks.map((book) => (
               <TableRow key={book.id}>
                 <TableCell>{book.book_id}</TableCell>
                 <TableCell>{book.title}</TableCell>
@@ -99,7 +125,7 @@ const BookCatalog = () => {
                 <TableCell>{book.genre}</TableCell>
                 <TableCell>{book.available}</TableCell>
                 <TableCell>
-                  <Button onClick={() => handleAddToBackpack(book.book_id, book.title)}>Add to Backpack</Button>
+                  <Button onClick={() => handleAddToBackpack(book)}>Add to Backpack</Button>
                 </TableCell>
               </TableRow>
             ))}
