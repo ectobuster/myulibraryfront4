@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BookCheckout } from '../interfaces'; 
+import { BookCheckout, Books } from '../interfaces'; 
 import { Table, TableHead, TableRow, TableCell, TableBody, TableContainer, Paper, Button } from '@mui/material';
 
 const UserBackpack = () => {
@@ -19,21 +19,42 @@ const UserBackpack = () => {
     }
   };
 
-  const handleDeleteFromBackpack = async (checkoutId: number) => {
+  const handleReturnBook = async (checkout: BookCheckout) => {
     try {
-      const response = await fetch(`http://localhost:5000/book-checkouts/${checkoutId}`, {
+      // Delete the checkout record
+      const deleteResponse = await fetch(`http://localhost:5000/book-checkouts/${checkout.checkout_id}`, {
         method: 'DELETE',
       });
-      if (response.ok) {
-        console.log('Book deleted from backpack successfully');
-        // Refresh the table by fetching the updated backpack list from the backend
-        fetchBackpack();
+
+      if (deleteResponse.ok) {
+        // Fetch the book details to update the available count
+        const bookResponse = await fetch(`http://localhost:5000/books/${checkout.book_id}`);
+        const bookData: Books = await bookResponse.json();
+
+        // Update the available count of the book in the database
+        const updateBookResponse = await fetch(`http://localhost:5000/books/${checkout.book_id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            ...bookData,
+            available: bookData.available + 1 // Increase the available count
+          }),
+        });
+
+        if (updateBookResponse.ok) {
+          console.log('Book returned and available count updated successfully');
+          // Refresh the table by fetching the updated backpack list from the backend
+          fetchBackpack();
+        } else {
+          console.error('Failed to update book available count');
+        }
       } else {
-        console.error('Failed to delete book from backpack');
-        // Handle error
+        console.error('Failed to return book');
       }
     } catch (error) {
-      console.error('Error deleting book from backpack:', error);
+      console.error('Error returning book:', error);
     }
   };
 
@@ -45,7 +66,7 @@ const UserBackpack = () => {
             <TableRow>
               <TableCell>User ID</TableCell>
               <TableCell>Book Title</TableCell>
-              <TableCell>Book ID</TableCell> {/* New column for book ID */}
+              <TableCell>Book ID</TableCell>
               <TableCell>Checkout Date</TableCell>
               <TableCell>Return Date</TableCell>
               <TableCell>Returned</TableCell>
@@ -56,13 +77,13 @@ const UserBackpack = () => {
             {backpack.map((checkout) => (
               <TableRow key={checkout.checkout_id}>
                 <TableCell>{checkout.user_id}</TableCell>
-                <TableCell>{checkout.title}</TableCell> {/* Display book title */}
-                <TableCell>{checkout.book_id}</TableCell> {/* Display book ID */}
+                <TableCell>{checkout.title}</TableCell>
+                <TableCell>{checkout.book_id}</TableCell>
                 <TableCell>{checkout.checkout_date}</TableCell>
                 <TableCell>{checkout.return_date}</TableCell>
                 <TableCell>{checkout.returned ? 'Yes' : 'No'}</TableCell>
                 <TableCell>
-                  <Button onClick={() => handleDeleteFromBackpack(checkout.checkout_id)}>Delete</Button>
+                  <Button onClick={() => handleReturnBook(checkout)}>Return</Button>
                 </TableCell>
               </TableRow>
             ))}
