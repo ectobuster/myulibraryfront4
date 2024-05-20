@@ -14,7 +14,7 @@ const BookCatalog = () => {
 
   const fetchBooks = async () => {
     try {
-      const response = await fetch('http://localhost:5000/books');
+      const response = await fetch('http://localhost:5000/api/books'); // Updated URL
       const data = await response.json();
       setBooks(data);
     } catch (error) {
@@ -25,7 +25,7 @@ const BookCatalog = () => {
   const handleAddToBackpack = async (book: Books) => {
     try {
       console.log('Adding book to backpack:', book); // Log the data being sent
-      const response = await fetch('http://localhost:5000/book-checkouts', {
+      const response = await fetch('http://localhost:5000/api/book-checkouts', { // Updated URL
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -44,7 +44,7 @@ const BookCatalog = () => {
         console.log('Book added to backpack successfully');
   
         // Update the available count of the book in the database
-        await fetch(`http://localhost:5000/books/${book.book_id}`, {
+        await fetch(`http://localhost:5000/api/books/${book.book_id}`, { // Updated URL
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -101,7 +101,6 @@ const BookCatalog = () => {
         <Button variant="contained" onClick={fetchBooks}>Search</Button>
       </Paper>
 
-
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -117,7 +116,7 @@ const BookCatalog = () => {
           </TableHead>
           <TableBody>
             {sortedBooks.map((book) => (
-              <TableRow key={book.id}>
+              <TableRow key={book.book_id}>
                 <TableCell>{book.book_id}</TableCell>
                 <TableCell>{book.title}</TableCell>
                 <TableCell>{book.author}</TableCell>
