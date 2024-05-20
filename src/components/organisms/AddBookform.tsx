@@ -20,7 +20,7 @@ const AddBookForm = () => {
 
   const handleAddBook = async () => {
     try {
-      const response = await fetch('http://localhost:5000/books', {
+      const response = await fetch('http://localhost:5000/api/books', { // Updated URL
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -48,40 +48,40 @@ const AddBookForm = () => {
 
   return (
     <div style={{ width: '1200px' }}>
-    <Paper elevation={3} style={{ padding: '20px' }}>
-      <TextField
-        name="title"
-        label="Title"
-        value={newBook.title}
-        onChange={handleInputChange}
-      />
-      <TextField
-        name="author"
-        label="Author"
-        value={newBook.author}
-        onChange={handleInputChange}
-      />
-      <TextField
-        name="published_year"
-        label="Published Year"
-        value={newBook.published_year}
-        onChange={handleInputChange}
-      />
-      <TextField
-        name="genre"
-        label="Genre"
-        value={newBook.genre}
-        onChange={handleInputChange}
-      />
-      <TextField
-        name="available"
-        label="Available"
-        type="number"
-        value={newBook.available}
-        onChange={handleInputChange}
-      />
-      <Button onClick={handleAddBook}>Add Book</Button>
-    </Paper>
+      <Paper elevation={3} style={{ padding: '20px' }}>
+        <TextField
+          name="title"
+          label="Title"
+          value={newBook.title}
+          onChange={handleInputChange}
+        />
+        <TextField
+          name="author"
+          label="Author"
+          value={newBook.author}
+          onChange={handleInputChange}
+        />
+        <TextField
+          name="published_year"
+          label="Published Year"
+          value={newBook.published_year}
+          onChange={handleInputChange}
+        />
+        <TextField
+          name="genre"
+          label="Genre"
+          value={newBook.genre}
+          onChange={handleInputChange}
+        />
+        <TextField
+          name="available"
+          label="Available"
+          type="number"
+          value={newBook.available}
+          onChange={handleInputChange}
+        />
+        <Button onClick={handleAddBook}>Add Book</Button>
+      </Paper>
     </div>
   );
 };
