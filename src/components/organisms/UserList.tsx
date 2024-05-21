@@ -16,11 +16,16 @@ const BookCatalog = () => {
     try {
       const response = await fetch('http://localhost:5000/api/books'); // Updated URL
       const data = await response.json();
+      
+      // Log headers
+      console.log('Response Headers:', response.headers);
+      
       setBooks(data);
     } catch (error) {
       console.error('Error fetching books:', error);
     }
   };
+  
 
   const handleAddToBackpack = async (book: Books) => {
     try {
