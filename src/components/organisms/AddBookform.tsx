@@ -20,7 +20,7 @@ const AddBookForm = () => {
 
   const handleAddBook = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/books', { // Updated URL
+      const response = await fetch('http://35.208.117.44:5000/api/books', { // Updated URL
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

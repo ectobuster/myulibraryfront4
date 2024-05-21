@@ -11,7 +11,7 @@ const UserBackpack = () => {
 
   const fetchBackpack = async () => {
     try {
-      const response = await fetch('http://35.208.117.44/api/book-checkouts');
+      const response = await fetch('http://35.208.117.44:5000/api/book-checkouts');
       const data = await response.json();
       setBackpack(data);
     } catch (error) {
@@ -22,17 +22,17 @@ const UserBackpack = () => {
   const handleReturnBook = async (checkout: BookCheckout) => {
     try {
       // Delete the checkout record
-      const deleteResponse = await fetch(`http://35.208.117.44/api/book-checkouts/${checkout.checkout_id}`, {
+      const deleteResponse = await fetch(`http://35.208.117.44:5000/api/book-checkouts/${checkout.checkout_id}`, {
         method: 'DELETE',
       });
 
       if (deleteResponse.ok) {
         // Fetch the book details to update the available count
-        const bookResponse = await fetch(`http://35.208.117.44/api/books/${checkout.book_id}`);
+        const bookResponse = await fetch(`http://35.208.117.44:5000/api/books/${checkout.book_id}`);
         const bookData: Books = await bookResponse.json();
 
         // Update the available count of the book in the database
-        const updateBookResponse = await fetch(`http://35.208.117.44/api/books/${checkout.book_id}`, {
+        const updateBookResponse = await fetch(`http://35.208.117.44:5000/api/books/${checkout.book_id}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
