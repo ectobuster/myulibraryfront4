@@ -14,7 +14,7 @@ const BookCatalog = () => {
 
   const fetchBooks = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/books'); // Updated URL
+      const response = await fetch('http://35.208.117.44:5000/api/books'); // Updated URL
       const data = await response.json();
       
       // Log headers
@@ -25,12 +25,11 @@ const BookCatalog = () => {
       console.error('Error fetching books:', error);
     }
   };
-  
 
   const handleAddToBackpack = async (book: Books) => {
     try {
       console.log('Adding book to backpack:', book); // Log the data being sent
-      const response = await fetch('http://localhost:5000/api/book-checkouts', { // Updated URL
+      const response = await fetch('http://35.208.117.44:5000/api/book-checkouts', { // Updated URL
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -49,7 +48,7 @@ const BookCatalog = () => {
         console.log('Book added to backpack successfully');
   
         // Update the available count of the book in the database
-        await fetch(`http://localhost:5000/api/books/${book.book_id}`, { // Updated URL
+        await fetch(`http://35.208.117.44:5000/api/books/${book.book_id}`, { // Updated URL
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
