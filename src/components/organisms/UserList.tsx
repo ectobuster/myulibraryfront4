@@ -1,147 +1,139 @@
 import React, { useState, useEffect } from 'react';
-import { Users } from '../interfaces'; 
-import { Table, TableHead, TableRow, TableCell, TableBody, TableContainer, Paper, Button, TextField } from '@mui/material';
+import { Books } from '../interfaces'; 
+import { Table, TableHead, TableRow, TableCell, TableBody, TableContainer, Paper, TextField, Button } from '@mui/material';
 
-const UserList = () => {
-  const [users, setUsers] = useState<Users[]>([]);
-  const [newUser, setNewUser] = useState<Users>({
-    user_id: 0,
-    first_name: '',
-    last_name: '',
-    email: '',
-    role: ''
-  });
+const BookCatalog = () => {
+  const [books, setBooks] = useState<Books[]>([]);
+  const [searchTitle, setSearchTitle] = useState('');
+  const [searchAuthor, setSearchAuthor] = useState('');
+  const [searchGenre, setSearchGenre] = useState('');
 
   useEffect(() => {
-    fetchUsers();
+    fetchBooks();
   }, []);
 
-  const fetchUsers = async () => {
+  const fetchBooks = async () => {
     try {
-      const response = await fetch('http://35.208.117.44:5000/users');
+      const response = await fetch('http://35.208.117.44:5000/api/books'); // Updated URL
       const data = await response.json();
-      setUsers(data);
+      setBooks(data);
     } catch (error) {
-      console.error('Error fetching users:', error);
+      console.error('Error fetching books:', error);
     }
   };
 
-  const handleAddUser = async () => {
+  const handleAddToBackpack = async (book: Books) => {
     try {
-      const response = await fetch('http://35.208.117.44:5000/users', {
+      console.log('Adding book to backpack:', book); // Log the data being sent
+      const response = await fetch('http://35.208.117.44:5000/api/book-checkouts', { // Updated URL
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(newUser),
+        body: JSON.stringify({
+          user_id: 1, // Assuming user_id is 1 for this experiment
+          book_id: book.book_id,
+          title: book.title,
+          author: book.author,
+          published_year: book.published_year,
+          genre: book.genre,
+          checkout_date: new Date().toISOString(), // Current date as checkout date
+        }),
       });
       if (response.ok) {
-        console.log('User added successfully');
-        // Refresh the table by fetching the updated user list from the backend
-        fetchUsers();
-        // Clear the form fields
-        setNewUser({
-          user_id: 0,
-          first_name: '',
-          last_name: '',
-          email: '',
-          role: ''
+        console.log('Book added to backpack successfully');
+  
+        // Update the available count of the book in the database
+        await fetch(`http://35.208.117.44:5000/api/books/${book.book_id}`, { // Updated URL
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            "book_id": book.book_id,
+            "title": book.title,
+            "author": book.author,
+            "published_year": book.published_year,
+            "genre": book.genre,
+            "available": book.available - 1
+          }), // Send the full JSON representation of the book
         });
+  
+        // Refresh the table by fetching the updated book list from the backend
+        fetchBooks();
       } else {
-        console.error('Failed to add user');
+        console.error('Failed to add book to backpack');
         // Handle error
       }
     } catch (error) {
-      console.error('Error adding user:', error);
+      console.error('Error adding book to backpack:', error);
     }
   };
 
-  const handleDeleteUser = async (userId: number) => {
-    try {
-      const response = await fetch(`http://localhost:5000/users/${userId}`, {
-        method: 'DELETE',
-      });
-      if (response.ok) {
-        console.log('User deleted successfully');
-        // Refresh the table by fetching the updated user list from the backend
-        fetchUsers();
-      } else {
-        console.error('Failed to delete user');
-        // Handle error
-      }
-    } catch (error) {
-      console.error('Error deleting user:', error);
-    }
-  };
+  const filteredBooks = books.filter(book => 
+    book.title.toLowerCase().includes(searchTitle.toLowerCase()) &&
+    book.author.toLowerCase().includes(searchAuthor.toLowerCase()) &&
+    book.genre.toLowerCase().includes(searchGenre.toLowerCase())
+  );
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setNewUser(prevState => ({
-      ...prevState,
-      [name]: value
-    }));
-  };
+  // Sort the filteredBooks array by book_id before rendering
+  const sortedBooks = filteredBooks.sort((a, b) => a.book_id - b.book_id);
 
   return (
-    <Paper> {/* Add Paper component */}
-      <div style={{ width: '1200px' }}>
+    <div style={{ width: '1200px' }}>
+      
+      <Paper elevation={3} style={{ padding: '20px', marginBottom: '20px' }}>
         <TextField
-          name="first_name"
-          label="First Name"
-          value={newUser.first_name}
-          onChange={handleChange}
+          label="Title"
+          value={searchTitle}
+          onChange={(e) => setSearchTitle(e.target.value)}
         />
         <TextField
-          name="last_name"
-          label="Last Name"
-          value={newUser.last_name}
-          onChange={handleChange}
+          label="Author"
+          value={searchAuthor}
+          onChange={(e) => setSearchAuthor(e.target.value)}
         />
         <TextField
-          name="email"
-          label="Email"
-          value={newUser.email}
-          onChange={handleChange}
+          label="Genre"
+          value={searchGenre}
+          onChange={(e) => setSearchGenre(e.target.value)}
         />
-        <TextField
-          name="role"
-          label="Role"
-          value={newUser.role}
-          onChange={handleChange}
-        />
-        <Button onClick={handleAddUser}>Add User</Button>
+        <Button variant="contained" onClick={fetchBooks}>Search</Button>
+      </Paper>
 
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>ID</TableCell>
-                <TableCell>First Name</TableCell>
-                <TableCell>Last Name</TableCell>
-                <TableCell>Email</TableCell>
-                <TableCell>Role</TableCell>
-                <TableCell>Action</TableCell>
+
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>ID</TableCell>
+              <TableCell>Title</TableCell>
+              <TableCell>Author</TableCell>
+              <TableCell>Published Year</TableCell>
+              <TableCell>Genre</TableCell>
+              <TableCell>Available</TableCell>
+              <TableCell>Action</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {sortedBooks.map((book) => (
+              <TableRow key={book.id}>
+                <TableCell>{book.book_id}</TableCell>
+                <TableCell>{book.title}</TableCell>
+                <TableCell>{book.author}</TableCell>
+                <TableCell>{book.published_year}</TableCell>
+                <TableCell>{book.genre}</TableCell>
+                <TableCell>{book.available}</TableCell>
+                <TableCell>
+                  <Button onClick={() => handleAddToBackpack(book)}>Add to Backpack</Button>
+                </TableCell>
               </TableRow>
-            </TableHead>
-            <TableBody>
-              {users.map((user) => (
-                <TableRow key={user.user_id}>
-                  <TableCell>{user.user_id}</TableCell>
-                  <TableCell>{user.first_name}</TableCell>
-                  <TableCell>{user.last_name}</TableCell>
-                  <TableCell>{user.email}</TableCell>
-                  <TableCell>{user.role}</TableCell>
-                  <TableCell>
-                    <Button onClick={() => handleDeleteUser(user.user_id)}>Delete</Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </div>
-    </Paper>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </div>
   );
 };
 
-export default UserList;
+export default BookCatalog;
