@@ -84,7 +84,7 @@ const UserList = () => {
 
   return (
     <Paper> {/* Add Paper component */}
-      <div>
+      <div style={{ width: '1200px' }}>
         <TextField
           name="first_name"
           label="First Name"
