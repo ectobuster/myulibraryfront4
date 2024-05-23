@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Books } from '../interfaces'; 
+import { Books } from '../interfaces';
 import { Table, TableHead, TableRow, TableCell, TableBody, TableContainer, Paper, TextField, Button } from '@mui/material';
 
 const BookCatalog = () => {
@@ -16,10 +16,10 @@ const BookCatalog = () => {
     try {
       const response = await fetch('http://35.208.117.44:5000/api/books'); // Updated URL
       const data = await response.json();
-      
+
       // Log headers
       console.log('Response Headers:', response.headers);
-      
+
       setBooks(data);
     } catch (error) {
       console.error('Error fetching books:', error);
@@ -46,7 +46,7 @@ const BookCatalog = () => {
       });
       if (response.ok) {
         console.log('Book added to backpack successfully');
-  
+
         // Update the available count of the book in the database
         await fetch(`http://35.208.117.44:5000/api/books/${book.book_id}`, { // Updated URL
           method: 'PUT',
@@ -62,7 +62,7 @@ const BookCatalog = () => {
             "available": book.available - 1
           }), // Send the full JSON representation of the book
         });
-  
+
         // Refresh the table by fetching the updated book list from the backend
         fetchBooks();
       } else {
@@ -74,7 +74,7 @@ const BookCatalog = () => {
     }
   };
 
-  const filteredBooks = books.filter(book => 
+  const filteredBooks = books.filter(book =>
     book.title.toLowerCase().includes(searchTitle.toLowerCase()) &&
     book.author.toLowerCase().includes(searchAuthor.toLowerCase()) &&
     book.genre.toLowerCase().includes(searchGenre.toLowerCase())
@@ -85,7 +85,6 @@ const BookCatalog = () => {
 
   return (
     <div style={{ width: '1200px' }}>
-      
       <Paper elevation={3} style={{ padding: '20px', marginBottom: '20px' }}>
         <TextField
           label="Title"
@@ -128,7 +127,12 @@ const BookCatalog = () => {
                 <TableCell>{book.genre}</TableCell>
                 <TableCell>{book.available}</TableCell>
                 <TableCell>
-                  <Button onClick={() => handleAddToBackpack(book)}>Add to Backpack</Button>
+                  <Button
+                    onClick={() => handleAddToBackpack(book)}
+                    disabled={book.available === 0}
+                  >
+                    Add to Backpack
+                  </Button>
                 </TableCell>
               </TableRow>
             ))}
