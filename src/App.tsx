@@ -5,6 +5,7 @@ import NavigationBar from './components/organisms/NavigationBar'; // Update the 
 import Admin from "./pages/admin";
 import User from "./pages/user";
 import Backpack from "./pages/backpack";
+import Home from './pages/home';
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
       <div className="app-container">
         <div className="content">
           <Routes>
+            <Route path="/" element={<Home />} />
             <Route path="/books" element={<Admin />} />
             <Route path="/users" element={<User/>} />
             <Route path="/admin" element={<Admin />} />
