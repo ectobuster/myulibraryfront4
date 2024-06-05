@@ -7,11 +7,4 @@ export default defineConfig({
   server: {
     port: 5175, // Specify the port number you want
   },
-  optimizeDeps: {
-    exclude: [
-      'react', 
-      'react-dom', 
-      // Add other dependencies you suspect might be causing the issue
-    ]
-  }
 })
