@@ -6,6 +6,7 @@ import Admin from "./pages/admin";
 import User from "./pages/user";
 import Backpack from "./pages/backpack";
 import Home from './pages/home';
+import Librarian from "./pages/librarian";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
             <Route path="/admin" element={<Admin />} />
             <Route path="/user" element={<User />} />
             <Route path="/backpack" element={<Backpack />} />
+            <Route path="/librarian" element={<Librarian />} />
           </Routes>
         </div>
       </div>

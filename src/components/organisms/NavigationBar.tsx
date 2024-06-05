@@ -30,6 +30,9 @@ function NavigationBar() {
           <Link to="/users" style={{ textDecoration: 'none', color: 'inherit' }}>
             <Button color="inherit">Users</Button>
           </Link>
+          <Link to="/Librarian" style={{ textDecoration: 'none', color: 'inherit' }}>
+            <Button color="inherit">Librarian</Button>
+          </Link>
         </div>
       </Toolbar>
     </AppBar>
